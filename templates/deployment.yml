@@ -1,0 +1,62 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dayio-{{ .Values.appName }}
+  namespace: {{ .Values.environment }}
+  labels:
+    app: dayio-{{ .Values.appName }}
+    env: {{ .Values.environment }}
+spec:
+  replicas: {{ .Values.replicas }}
+  selector:
+    matchLabels:
+      app: dayio-{{ .Values.appName }}
+  template:
+    metadata:
+      labels:
+        app: dayio-{{ .Values.appName }}
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: {{ .Values.affinity.key }}
+                operator: In
+                values: 
+                - {{ .Values.affinity.value }}
+      containers:
+      - name: dayio-{{ .Values.appName }}
+        image: {{ .Values.docker.registry }}/{{ .Values.docker.image }}
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: NODE_ENV
+          value: {{ .Values.environment }}
+        - name: SAMPLE_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: dayio-{{ .Values.appName}}-{{ .Values.secrets.samplePassword }}
+              key: password
+        resources:
+          limits:
+            memory: {{ .Values.docker.container.memoryLimits }}
+            cpu: {{ .Values.docker.container.cpuLimits }}
+          requests:
+            memory: {{ .Values.docker.container.memoryRequests }}
+            cpu: {{ .Values.docker.container.cpuLimits }}
+        ports:
+          - name: http
+            containerPort: {{ .Values.port }}
+            protocol: TCP
+        livenessProbe:
+          tcpSocket:
+            port: {{ .Values.port }}
+          initialDelaySeconds: 60
+          periodSeconds: 30
+          failureThreshold: 5
+        readinessProbe:
+          tcpSocket:
+            port: {{ .Values.port }}
+          initialDelaySeconds: 3
+          periodSeconds: 10

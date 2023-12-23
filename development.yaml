@@ -1,0 +1,29 @@
+##To define General Settings
+appName: dev-userservice
+environment: development
+replicas: 1
+prometheus: false
+
+##To define Secrets Settings
+secrets:
+  samplePassword: abcpass
+
+## To define Service/Ingress Settings
+url: "user.development.day.io"
+port: 8080
+
+## To define Node Affinity Settings
+affinity:
+  key: "kubernetes.io/os"
+  value: linux
+
+## To define Docker image settings
+docker:
+  registry: ghcr.io
+  image: "lazevedo-devops/dayio-userservice:main"
+  container:
+    memoryLimits: "256Mi"
+    memoryRequests: "64Mi"
+    cpuLimits: "500m"
+    cpuRequests: "250m"
+

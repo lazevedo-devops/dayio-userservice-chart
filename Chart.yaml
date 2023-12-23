@@ -1,0 +1,4 @@
+apiVersion: v1
+description: Helm Chart for Day-io User Service app.
+name: dayio-userservice
+version: 1.0.0

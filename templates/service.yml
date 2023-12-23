@@ -1,0 +1,21 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dayio-{{ .Values.appName }}
+  namespace: {{ .Values.environment }}
+{{- if .Values.prometheus }}
+  annotations:
+    prometheus.io/scrape: "{{ .Values.prometheus}}"
+    prometheus.io/port: "{{ .Values.port }}"
+    prometheus.io/path: "/metrics"
+{{end}}
+spec:
+  type: LoadBalancer
+  ports:
+  - name: dayio-{{ .Values.appName }}
+    port: {{ .Values.port }}
+    targetPort: {{ .Values.port }}
+    protocol: TCP
+  selector:
+    app: dayio-{{ .Values.appName }}
