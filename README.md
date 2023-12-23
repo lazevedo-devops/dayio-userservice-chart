@@ -1,6 +1,6 @@
 # Helm Chart for User Service App
 
-This Helm Charts contains all required items for deploy User Service App at Kubernetes Cluster.
+This Helm Chart contains all required items for deploy User Service App at Kubernetes Cluster.
 
 #### Pre-Requisites
 
