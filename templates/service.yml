@@ -11,7 +11,7 @@ metadata:
     prometheus.io/path: "/metrics"
 {{end}}
 spec:
-  type: LoadBalancer
+  type: NodePort
   ports:
   - name: dayio-{{ .Values.appName }}
     port: {{ .Values.port }}
